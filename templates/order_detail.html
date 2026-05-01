@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}Order Details - FoodieHub{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-4">
+    <h2 class="text-center mb-4">Order Details</h2>
+    
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Order #{{ order.order_number }}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-info-circle"></i> Order Information</h6>
+                            <p><strong>Date:</strong> {{ order.created_at|date:"d M Y, H:i" }}</p>
+                            <p><strong>Status:</strong> 
+                                {% if order.status == 'pending' %}
+                                <span class="badge bg-warning">Pending</span>
+                                {% elif order.status == 'confirmed' %}
+                                <span class="badge bg-info">Confirmed</span>
+                                {% elif order.status == 'preparing' %}
+                                <span class="badge bg-primary">Preparing</span>
+                                {% elif order.status == 'out_for_delivery' %}
+                                <span class="badge bg-success">Out for Delivery</span>
+                                {% elif order.status == 'delivered' %}
+                                <span class="badge bg-secondary">Delivered</span>
+                                {% elif order.status == 'cancelled' %}
+                                <span class="badge bg-danger">Cancelled</span>
+                                {% endif %}
+                            </p>
+                            <p><strong>Payment Method:</strong> {{ order.get_payment_method_display }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-truck"></i> Delivery Information</h6>
+                            <p><strong>Address:</strong> {{ order.delivery_address }}</p>
+                            <p><strong>Phone:</strong> {{ order.phone_number }}</p>
+                        </div>
+                    </div>
+                    
+                    <h6><i class="fas fa-shopping-bag"></i> Items Ordered</h6>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in order.items.all %}
+                                <tr>
+                                    <td>{{ item.food_item.name }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>₹{{ item.price }}</td>
+                                    <td class="text-danger">₹{{ item.get_total_price }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-active">
+                                    <td colspan="3" class="text-end"><strong>Total Amount:</strong></td>
+                                    <td><strong class="text-danger h5">₹{{ order.total_amount }}</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    
+                    {% if order.special_instructions %}
+                    <div class="alert alert-info mt-3">
+                        <strong><i class="fas fa-comment"></i> Special Instructions:</strong><br>
+                        {{ order.special_instructions }}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mt-4 text-center">
+                        <a href="{% url 'my_orders' %}" class="btn btn-danger">
+                            <i class="fas fa-arrow-left"></i> Back to Orders
+                        </a>
+                        {% if order.status == 'pending' %}
+                        <button class="btn btn-warning" onclick="cancelOrder({{ order.id }})">
+                            <i class="fas fa-times"></i> Cancel Order
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function cancelOrder(orderId) {
+    if (confirm('Are you sure you want to cancel this order?')) {
+        fetch(`/cancel-order/${orderId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || getCookie('csrftoken'),
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            }
+        });
+    }
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}

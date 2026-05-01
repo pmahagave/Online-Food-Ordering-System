@@ -1,0 +1,99 @@
+/* Toast Notifications */
+.toast-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    padding: 12px 20px;
+    border-radius: 8px;
+    animation: slideInRight 0.3s ease;
+    transition: opacity 0.3s ease;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.add-to-cart-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Cart badge */
+.cart-badge {
+    font-size: 0.7rem;
+    margin-left: 5px;
+}
+
+
+
+
+/* Navbar Button Styles */
+.navbar-nav .nav-link.btn {
+    padding: 8px 20px;
+    margin: 0 5px;
+    transition: all 0.3s ease;
+}
+
+.navbar-nav .nav-link.btn-outline-danger {
+    border: 2px solid #dc3545;
+}
+
+.navbar-nav .nav-link.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white !important;
+    transform: translateY(-2px);
+}
+
+.navbar-nav .nav-link.btn-danger {
+    background-color: #dc3545;
+    border: 2px solid #dc3545;
+}
+
+.navbar-nav .nav-link.btn-danger:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+}
+
+/* Cart Badge */
+#cartCount {
+    position: relative;
+    top: -8px;
+    right: 5px;
+    font-size: 10px;
+    padding: 3px 6px;
+    border-radius: 50%;
+}
+
+/* Active Nav Link */
+.navbar-nav .nav-link.active {
+    color: #dc3545 !important;
+    font-weight: bold;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin-top: 10px;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #dc3545;
+}
+
+.dropdown-item.text-danger:hover {
+    background-color: #dc3545;
+    color: white !important;
+}
